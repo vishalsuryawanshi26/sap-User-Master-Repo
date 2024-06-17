@@ -1,0 +1,522 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+<edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+<edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Communication.xml">
+<edmx:Include Alias="Communication" Namespace="com.sap.vocabularies.Communication.v1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+<edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+<edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+</edmx:Reference>
+<edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+<edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1"/>
+</edmx:Reference>
+<edmx:DataServices>
+<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="fioriUserMasterService">
+<EntityContainer Name="EntityContainer">
+<EntitySet Name="MasterIasUsers" EntityType="fioriUserMasterService.MasterIasUsers"/>
+<EntitySet Name="MasterIvenUsers" EntityType="fioriUserMasterService.MasterIvenUsers">
+<NavigationPropertyBinding Path="TO_USER_ROLES" Target="MasterIvenUserRoles"/>
+<NavigationPropertyBinding Path="TO_USER_ENTITIES" Target="MasterIvenUserEntity"/>
+<NavigationPropertyBinding Path="SiblingEntity" Target="MasterIvenUsers"/>
+</EntitySet>
+<EntitySet Name="MasterIvenUserRoles" EntityType="fioriUserMasterService.MasterIvenUserRoles">
+<NavigationPropertyBinding Path="TO_ROLE" Target="MasterUserRole"/>
+<NavigationPropertyBinding Path="TO_USER" Target="MasterIvenUsers"/>
+<NavigationPropertyBinding Path="SiblingEntity" Target="MasterIvenUserRoles"/>
+</EntitySet>
+<EntitySet Name="MasterEntityCode" EntityType="fioriUserMasterService.MasterEntityCode"/>
+<EntitySet Name="MasterUserRole" EntityType="fioriUserMasterService.MasterUserRole"/>
+<EntitySet Name="MasterIvenUserEntity" EntityType="fioriUserMasterService.MasterIvenUserEntity">
+<NavigationPropertyBinding Path="TO_ENTITY_CODE" Target="MasterEntityCode"/>
+<NavigationPropertyBinding Path="TO_USER" Target="MasterIvenUsers"/>
+<NavigationPropertyBinding Path="SiblingEntity" Target="MasterIvenUserEntity"/>
+</EntitySet>
+<EntitySet Name="RequestInfo" EntityType="fioriUserMasterService.RequestInfo">
+<NavigationPropertyBinding Path="TO_ENTITY_CODE" Target="MasterEntityCode"/>
+<NavigationPropertyBinding Path="TO_HIERARCHY" Target="MASTER_APPROVAL_HIERARCHY_FE"/>
+</EntitySet>
+<EntitySet Name="MASTER_APPROVAL_HIERARCHY_FE" EntityType="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE">
+<NavigationPropertyBinding Path="TO_ENTITY_CODE" Target="MasterEntityCode"/>
+<NavigationPropertyBinding Path="TO_ROLE" Target="MasterUserRole"/>
+</EntitySet>
+</EntityContainer>
+<EntityType Name="MasterIasUsers">
+<Key>
+<PropertyRef Name="USER_ID"/>
+<PropertyRef Name="EMAIL"/>
+</Key>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="50" Nullable="false"/>
+<Property Name="STATUS" Type="Edm.String" MaxLength="50"/>
+<Property Name="LOGIN" Type="Edm.String" MaxLength="50"/>
+<Property Name="EMAIL" Type="Edm.String" MaxLength="150" Nullable="false"/>
+<Property Name="FIRST_NAME" Type="Edm.String" MaxLength="250"/>
+<Property Name="LAST_NAME" Type="Edm.String" MaxLength="250"/>
+<Property Name="COMPANY_CODE" Type="Edm.String" MaxLength="100"/>
+<Property Name="EMP_NO" Type="Edm.String" MaxLength="100"/>
+<Property Name="MOBILE_NO" Type="Edm.String" MaxLength="15"/>
+</EntityType>
+<EntityType Name="MasterIvenUsers">
+<Key>
+<PropertyRef Name="ID"/>
+<PropertyRef Name="IsActiveEntity"/>
+</Key>
+<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+<Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+<Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+<Property Name="SR_NO" Type="Edm.Int32"/>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="50"/>
+<Property Name="USER_NAME" Type="Edm.String" MaxLength="500"/>
+<Property Name="EMAIL" Type="Edm.String" MaxLength="150"/>
+<Property Name="EMP_NO" Type="Edm.String" MaxLength="100"/>
+<Property Name="ACTIVE" Type="Edm.String" MaxLength="1"/>
+<NavigationProperty Name="TO_USER_ROLES" Type="Collection(fioriUserMasterService.MasterIvenUserRoles)" Partner="TO_USER">
+<OnDelete Action="Cascade"/>
+</NavigationProperty>
+<NavigationProperty Name="TO_USER_ENTITIES" Type="Collection(fioriUserMasterService.MasterIvenUserEntity)" Partner="TO_USER">
+<OnDelete Action="Cascade"/>
+</NavigationProperty>
+<Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+<Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<NavigationProperty Name="DraftAdministrativeData" Type="fioriUserMasterService.DraftAdministrativeData" ContainsTarget="true"/>
+<NavigationProperty Name="SiblingEntity" Type="fioriUserMasterService.MasterIvenUsers"/>
+</EntityType>
+<EntityType Name="MasterIvenUserRoles">
+<Key>
+<PropertyRef Name="ID"/>
+<PropertyRef Name="IsActiveEntity"/>
+</Key>
+<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="50"/>
+<Property Name="USER_ROLE" Type="Edm.String" MaxLength="50"/>
+<Property Name="EMAIL" Type="Edm.String" MaxLength="150"/>
+<NavigationProperty Name="TO_ROLE" Type="fioriUserMasterService.MasterUserRole">
+<ReferentialConstraint Property="USER_ROLE" ReferencedProperty="CODE"/>
+</NavigationProperty>
+<NavigationProperty Name="TO_USER" Type="fioriUserMasterService.MasterIvenUsers" Partner="TO_USER_ROLES">
+<ReferentialConstraint Property="TO_USER_ID" ReferencedProperty="ID"/>
+</NavigationProperty>
+<Property Name="TO_USER_ID" Type="Edm.Guid"/>
+<Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+<Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<NavigationProperty Name="DraftAdministrativeData" Type="fioriUserMasterService.DraftAdministrativeData" ContainsTarget="true"/>
+<NavigationProperty Name="SiblingEntity" Type="fioriUserMasterService.MasterIvenUserRoles"/>
+</EntityType>
+<EntityType Name="MasterEntityCode">
+<Key>
+<PropertyRef Name="BUKRS"/>
+</Key>
+<Property Name="BUKRS" Type="Edm.String" MaxLength="4" Nullable="false"/>
+<Property Name="BUTXT" Type="Edm.String" MaxLength="50"/>
+<Property Name="ORT01" Type="Edm.String" MaxLength="25"/>
+<Property Name="WAERS" Type="Edm.String" MaxLength="5"/>
+</EntityType>
+<EntityType Name="MasterUserRole">
+<Key>
+<PropertyRef Name="CODE"/>
+</Key>
+<Property Name="CODE" Type="Edm.String" MaxLength="25" Nullable="false"/>
+<Property Name="DESCRIPTION" Type="Edm.String" MaxLength="100"/>
+</EntityType>
+<EntityType Name="MasterIvenUserEntity">
+<Key>
+<PropertyRef Name="ID"/>
+<PropertyRef Name="IsActiveEntity"/>
+</Key>
+<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="50"/>
+<Property Name="ENTITY_CODE" Type="Edm.String" MaxLength="50"/>
+<Property Name="EMAIL" Type="Edm.String" MaxLength="150"/>
+<NavigationProperty Name="TO_ENTITY_CODE" Type="fioriUserMasterService.MasterEntityCode">
+<ReferentialConstraint Property="ENTITY_CODE" ReferencedProperty="BUKRS"/>
+</NavigationProperty>
+<NavigationProperty Name="TO_USER" Type="fioriUserMasterService.MasterIvenUsers" Partner="TO_USER_ENTITIES">
+<ReferentialConstraint Property="TO_USER_ID" ReferencedProperty="ID"/>
+</NavigationProperty>
+<Property Name="TO_USER_ID" Type="Edm.Guid"/>
+<Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+<Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+<NavigationProperty Name="DraftAdministrativeData" Type="fioriUserMasterService.DraftAdministrativeData" ContainsTarget="true"/>
+<NavigationProperty Name="SiblingEntity" Type="fioriUserMasterService.MasterIvenUserEntity"/>
+</EntityType>
+<EntityType Name="RequestInfo">
+<Key>
+<PropertyRef Name="REQUEST_NO"/>
+</Key>
+<Property Name="REQUEST_NO" Type="Edm.Int64" Nullable="false"/>
+<Property Name="SAP_VENDOR_CODE" Type="Edm.String" MaxLength="10"/>
+<Property Name="IVEN_VENDOR_CODE" Type="Edm.Int64"/>
+<Property Name="STATUS" Type="Edm.Int32"/>
+<Property Name="REGISTERED_ID" Type="Edm.String" MaxLength="100"/>
+<Property Name="ENTITY_CODE" Type="Edm.String" MaxLength="10"/>
+<Property Name="REQUEST_TYPE" Type="Edm.Int32"/>
+<Property Name="CREATION_TYPE" Type="Edm.Int32"/>
+<Property Name="VENDOR_NAME1" Type="Edm.String" MaxLength="100"/>
+<Property Name="VENDOR_NAME2" Type="Edm.String" MaxLength="100"/>
+<Property Name="VENDOR_CODE" Type="Edm.String" MaxLength="50"/>
+<Property Name="APPROVER_LEVEL" Type="Edm.Int32"/>
+<Property Name="APPROVER_ROLE" Type="Edm.String" MaxLength="50"/>
+<Property Name="REQUESTER_ID" Type="Edm.String" MaxLength="100"/>
+<Property Name="SUPPL_TYPE" Type="Edm.String" MaxLength="50"/>
+<Property Name="SUPPL_TYPE_DESC" Type="Edm.String" MaxLength="50"/>
+<Property Name="BP_TYPE_CODE" Type="Edm.String" MaxLength="4"/>
+<Property Name="BP_TYPE_DESC" Type="Edm.String" MaxLength="100"/>
+<Property Name="REQUEST_RESENT" Type="Edm.String" MaxLength="5"/>
+<Property Name="MDG_CR_NO" Type="Edm.String" MaxLength="15"/>
+<Property Name="LAST_ACTIVE_REQ_NO" Type="Edm.Int64"/>
+<Property Name="SECONDARY_EMAILS_ID" Type="Edm.String" MaxLength="500"/>
+<Property Name="WEBSITE" Type="Edm.String" MaxLength="100"/>
+<Property Name="LEGAL_STRUCTURE" Type="Edm.String" MaxLength="50"/>
+<Property Name="LEGAL_STRUCTURE_OTHER" Type="Edm.String" MaxLength="100"/>
+<Property Name="ESTAB_YEAR" Type="Edm.String" MaxLength="4"/>
+<Property Name="NO_OF_EMP" Type="Edm.Int32"/>
+<Property Name="NO_OF_ENGG" Type="Edm.Int32"/>
+<Property Name="NO_OF_QUALITY" Type="Edm.Int32"/>
+<Property Name="NO_OF_PROD" Type="Edm.Int32"/>
+<Property Name="NO_OF_ADMIN" Type="Edm.Int32"/>
+<Property Name="NO_OF_OTHERS" Type="Edm.Int32"/>
+<Property Name="BUSINESS_TYPE" Type="Edm.String" MaxLength="50"/>
+<Property Name="TRADE_LIC_NO" Type="Edm.String" MaxLength="50"/>
+<Property Name="TRADE_LIC_NO_DATE" Type="Edm.Date"/>
+<Property Name="VAT_REG_NUMBER" Type="Edm.String" MaxLength="25"/>
+<Property Name="VAT_REG_DATE" Type="Edm.Date"/>
+<Property Name="SUPPL_CATEGORY" Type="Edm.String" MaxLength="5000"/>
+<Property Name="SUPPL_CATEGORY_DESC" Type="Edm.String" MaxLength="5000"/>
+<Property Name="ACTIVITY_TYPE" Type="Edm.String" MaxLength="30"/>
+<Property Name="ORDER_SIZE_MIN" Type="Edm.String" MaxLength="50"/>
+<Property Name="ORDER_SIZE_MAX" Type="Edm.String" MaxLength="50"/>
+<Property Name="TOTAL_PROD_CAPACITY" Type="Edm.String" MaxLength="20"/>
+<Property Name="LAST_SAVED_STEP" Type="Edm.Int32"/>
+<Property Name="COMPLETED_BY" Type="Edm.String" MaxLength="100"/>
+<Property Name="COMPLETED_BY_POSITION" Type="Edm.String" MaxLength="50"/>
+<Property Name="ACK_VALIDATION" Type="Edm.String" MaxLength="5"/>
+<Property Name="SUBMISSION_DATE" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="LAST_UPDATED_ON" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="OT_PARENT_ID" Type="Edm.String" MaxLength="10"/>
+<Property Name="OT_FOLDER1_ID" Type="Edm.String" MaxLength="25"/>
+<Property Name="OT_FOLDER2_ID" Type="Edm.String" MaxLength="25"/>
+<Property Name="OT_FOLDER3_ID" Type="Edm.String" MaxLength="25"/>
+<Property Name="OT_FOLDER4_ID" Type="Edm.String" MaxLength="25"/>
+<Property Name="VAT_CHECK" Type="Edm.String" MaxLength="1"/>
+<Property Name="ICV_SCORE" Type="Edm.Decimal" Scale="variable"/>
+<Property Name="ICV_DATE" Type="Edm.Date"/>
+<Property Name="ICV_CHECK" Type="Edm.String" MaxLength="1"/>
+<Property Name="NDA_TYPE" Type="Edm.String" MaxLength="50"/>
+<Property Name="REMINDER_COUNT" Type="Edm.Int32"/>
+<Property Name="BUYER_ASSIGN_CHECK" Type="Edm.String" MaxLength="1"/>
+<Property Name="CREATED_ON" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="COMMENT" Type="Edm.String" MaxLength="1000"/>
+<Property Name="LEGACY_ID" Type="Edm.String" MaxLength="10"/>
+<Property Name="PROCESS_LEVEL" Type="Edm.String" MaxLength="10"/>
+<NavigationProperty Name="TO_ENTITY_CODE" Type="fioriUserMasterService.MasterEntityCode">
+<ReferentialConstraint Property="ENTITY_CODE" ReferencedProperty="BUKRS"/>
+</NavigationProperty>
+<NavigationProperty Name="TO_HIERARCHY" Type="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE"/>
+</EntityType>
+<EntityType Name="MASTER_APPROVAL_HIERARCHY_FE">
+<Key>
+<PropertyRef Name="ID"/>
+</Key>
+<Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+<Property Name="APPR_TYPE" Type="Edm.String" MaxLength="10"/>
+<Property Name="ENTITY_CODE" Type="Edm.String" MaxLength="10"/>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="1000"/>
+<Property Name="APPROVER_LEVEL" Type="Edm.Int32"/>
+<Property Name="USER_ROLE" Type="Edm.String" MaxLength="10"/>
+<Property Name="ACCESS_EDIT" Type="Edm.Boolean" DefaultValue="false"/>
+<Property Name="ACCESS_APPROVE" Type="Edm.Boolean" DefaultValue="false"/>
+<Property Name="ACCESS_SENDBACK" Type="Edm.Boolean" DefaultValue="false"/>
+<Property Name="ACCESS_REJECT" Type="Edm.Boolean" DefaultValue="false"/>
+<NavigationProperty Name="TO_ENTITY_CODE" Type="fioriUserMasterService.MasterEntityCode">
+<ReferentialConstraint Property="ENTITY_CODE" ReferencedProperty="BUKRS"/>
+</NavigationProperty>
+<NavigationProperty Name="TO_ROLE" Type="fioriUserMasterService.MasterUserRole">
+<ReferentialConstraint Property="USER_ROLE" ReferencedProperty="CODE"/>
+</NavigationProperty>
+<Property Name="TO_ENTITY_TYPE_ID" Type="Edm.Guid"/>
+</EntityType>
+<EntityType Name="DraftAdministrativeData">
+<Key>
+<PropertyRef Name="DraftUUID"/>
+</Key>
+<Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+<Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+<Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+<Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+<Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+<Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+<Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+</EntityType>
+<ComplexType Name="User_Details">
+<Property Name="USER_ROLE" Type="Edm.String" MaxLength="50"/>
+<Property Name="USER_ID" Type="Edm.String" MaxLength="50"/>
+</ComplexType>
+<Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+<Parameter Name="in" Type="fioriUserMasterService.MasterIvenUsers"/>
+<Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+<ReturnType Type="fioriUserMasterService.MasterIvenUsers"/>
+</Action>
+<Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+<Parameter Name="in" Type="fioriUserMasterService.MasterIvenUserRoles"/>
+<Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+<ReturnType Type="fioriUserMasterService.MasterIvenUserRoles"/>
+</Action>
+<Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+<Parameter Name="in" Type="fioriUserMasterService.MasterIvenUserEntity"/>
+<Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+<ReturnType Type="fioriUserMasterService.MasterIvenUserEntity"/>
+</Action>
+<Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+<Parameter Name="in" Type="fioriUserMasterService.MasterIvenUsers"/>
+<ReturnType Type="fioriUserMasterService.MasterIvenUsers"/>
+</Action>
+<Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+<Parameter Name="in" Type="fioriUserMasterService.MasterIvenUsers"/>
+<Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+<ReturnType Type="fioriUserMasterService.MasterIvenUsers"/>
+</Action>
+<Annotations Target="fioriUserMasterService.MasterIasUsers/EMAIL">
+<Annotation Term="Communication.IsEmailAddress" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIasUsers/MOBILE_NO">
+<Annotation Term="Communication.IsPhoneNumber" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers">
+<Annotation Term="Common.SideEffects" Qualifier="UserCredentialsChange">
+<Record Type="Common.SideEffectsType">
+<PropertyValue Property="SourceProperties">
+<Collection>
+<PropertyPath>USER_ID</PropertyPath>
+</Collection>
+</PropertyValue>
+<PropertyValue Property="TargetEntities">
+<Collection>
+<NavigationPropertyPath>TO_USER_ROLES</NavigationPropertyPath>
+<NavigationPropertyPath>TO_USER_ENTITIES</NavigationPropertyPath>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+<Annotation Term="Common.SideEffects" Qualifier="UserChanges">
+<Record Type="Common.SideEffectsType">
+<PropertyValue Property="SourceProperties">
+<Collection>
+<PropertyPath>USER_ID</PropertyPath>
+</Collection>
+</PropertyValue>
+<PropertyValue Property="TargetProperties">
+<Collection>
+<Path>USER_NAME</Path>
+<Path>EMAIL</Path>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations Target="fioriUserMasterService.EntityContainer/MasterIvenUsers">
+<Annotation Term="Common.SideEffects" Qualifier="UserCredentialsChange">
+<Record Type="Common.SideEffectsType">
+<PropertyValue Property="SourceProperties">
+<Collection>
+<PropertyPath>USER_ID</PropertyPath>
+</Collection>
+</PropertyValue>
+<PropertyValue Property="TargetEntities">
+<Collection>
+<NavigationPropertyPath>TO_USER_ROLES</NavigationPropertyPath>
+<NavigationPropertyPath>TO_USER_ENTITIES</NavigationPropertyPath>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+<Annotation Term="Common.SideEffects" Qualifier="UserChanges">
+<Record Type="Common.SideEffectsType">
+<PropertyValue Property="SourceProperties">
+<Collection>
+<PropertyPath>USER_ID</PropertyPath>
+</Collection>
+</PropertyValue>
+<PropertyValue Property="TargetProperties">
+<Collection>
+<Path>USER_NAME</Path>
+<Path>EMAIL</Path>
+</Collection>
+</PropertyValue>
+</Record>
+</Annotation>
+<Annotation Term="Common.DraftRoot">
+<Record Type="Common.DraftRootType">
+<PropertyValue Property="ActivationAction" String="fioriUserMasterService.draftActivate"/>
+<PropertyValue Property="EditAction" String="fioriUserMasterService.draftEdit"/>
+<PropertyValue Property="PreparationAction" String="fioriUserMasterService.draftPrepare"/>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/createdAt">
+<Annotation Term="UI.HiddenFilter" Bool="true"/>
+<Annotation Term="Core.Immutable" Bool="true"/>
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.Label" String="Created On"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/createdBy">
+<Annotation Term="UI.HiddenFilter" Bool="true"/>
+<Annotation Term="Core.Immutable" Bool="true"/>
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Core.Description" String="User's unique ID"/>
+<Annotation Term="Common.Label" String="Created By"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/modifiedAt">
+<Annotation Term="UI.HiddenFilter" Bool="true"/>
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.Label" String="Changed On"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/modifiedBy">
+<Annotation Term="UI.HiddenFilter" Bool="true"/>
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Core.Description" String="User's unique ID"/>
+<Annotation Term="Common.Label" String="Changed By"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/USER_ID">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/USER_NAME">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/EMAIL">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/IsActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/HasActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/HasDraftEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUsers/DraftAdministrativeData">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.EntityContainer/MasterIvenUserRoles">
+<Annotation Term="Common.DraftNode">
+<Record Type="Common.DraftNodeType">
+<PropertyValue Property="PreparationAction" String="fioriUserMasterService.draftPrepare"/>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/USER_ID">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/USER_ROLE">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/EMAIL">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/IsActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/HasActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/HasDraftEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserRoles/DraftAdministrativeData">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.EntityContainer/MasterIvenUserEntity">
+<Annotation Term="Common.DraftNode">
+<Record Type="Common.DraftNodeType">
+<PropertyValue Property="PreparationAction" String="fioriUserMasterService.draftPrepare"/>
+</Record>
+</Annotation>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/USER_ID">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/ENTITY_CODE">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/EMAIL">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/IsActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/HasActiveEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/HasDraftEntity">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MasterIvenUserEntity/DraftAdministrativeData">
+<Annotation Term="UI.Hidden" Bool="true"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE/APPR_TYPE">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE/ENTITY_CODE">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE/USER_ID">
+<Annotation Term="Communication.IsEmailAddress" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE/APPROVER_LEVEL">
+<Annotation Term="Core.Computed" Bool="true"/>
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+<Annotation Term="Validation.Minimum" Int="1"/>
+<Annotation Term="Validation.Maximum" Int="1000"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.MASTER_APPROVAL_HIERARCHY_FE/USER_ROLE">
+<Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData">
+<Annotation Term="Common.Label" String="Draft Administrative Data"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/DraftUUID">
+<Annotation Term="UI.Hidden" Bool="true"/>
+<Annotation Term="Common.Label" String="Draft (Technical ID)"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/CreationDateTime">
+<Annotation Term="Common.Label" String="Draft Created On"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/CreatedByUser">
+<Annotation Term="Common.Label" String="Draft Created By"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/DraftIsCreatedByMe">
+<Annotation Term="UI.Hidden" Bool="true"/>
+<Annotation Term="Common.Label" String="Draft Created By Me"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/LastChangeDateTime">
+<Annotation Term="Common.Label" String="Draft Last Changed On"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/LastChangedByUser">
+<Annotation Term="Common.Label" String="Draft Last Changed By"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/InProcessByUser">
+<Annotation Term="Common.Label" String="Draft In Process By"/>
+</Annotations>
+<Annotations Target="fioriUserMasterService.DraftAdministrativeData/DraftIsProcessedByMe">
+<Annotation Term="UI.Hidden" Bool="true"/>
+<Annotation Term="Common.Label" String="Draft In Process By Me"/>
+</Annotations>
+</Schema>
+</edmx:DataServices>
+</edmx:Edmx>

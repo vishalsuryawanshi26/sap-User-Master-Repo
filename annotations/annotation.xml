@@ -1,0 +1,269 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.Common.v1" Alias="Common"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Namespace="com.sap.vocabularies.UI.v1" Alias="UI"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="/odata/v4/fiori-user-master/$metadata">
+        <edmx:Include Namespace="fioriUserMasterService"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="local">
+            <Annotations Target="fioriUserMasterService.MasterIvenUsers">
+
+            <Annotation Term="Common.SideEffects" Qualifier="UserChanges">
+        
+                <Record>
+            <PropertyValue Property="SourceProperties">
+                <Collection>
+                    <PropertyPath>USER_ID</PropertyPath>
+                </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+                <Collection>
+                    <String>USER_NAME</String>
+                    <String>EMAIL</String>
+                </Collection>
+            </PropertyValue>
+            
+        </Record>
+        </Annotation>
+
+        <Annotation Term="Common.SideEffects" Qualifier="UserCredentialsChange">
+            <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceProperties">
+            <Collection>
+            <PropertyPath>USER_ID</PropertyPath>
+            </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetEntities">
+            <Collection>
+            <NavigationPropertyPath>TO_USER_ROLES</NavigationPropertyPath>
+            <NavigationPropertyPath>TO_USER_ENTITIES</NavigationPropertyPath>
+            </Collection>
+            </PropertyValue>
+            </Record>
+        </Annotation>
+
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="USER_ID"/>
+                            <PropertyValue Property="Label" String="User ID"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="USER_NAME"/>
+                            <PropertyValue Property="Label" String="User Name"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EMAIL"/>
+                            <PropertyValue Property="Label" String="Email"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="User ID"/>
+                            <PropertyValue Property="ID" String="User"/>
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#User"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="User Role"/>
+                            <PropertyValue Property="ID" String="UserRole"/>
+                            <PropertyValue Property="Target" AnnotationPath="TO_USER_ROLES/@UI.LineItem#UserRole"/>
+                        </Record>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Label" String="User Entity"/>
+                            <PropertyValue Property="ID" String="UserEntity"/>
+                            <PropertyValue Property="Target" AnnotationPath="TO_USER_ENTITIES/@UI.LineItem#UserEntity"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="User">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="USER_ID"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="USER_NAME"/>
+                                    <PropertyValue Property="Label" String="User Name"/>
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="EMAIL"/>
+                                    <PropertyValue Property="Label" String="{@i18n>email}"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record>
+                        <PropertyValue Property="TypeName" String=""/>
+                        <PropertyValue Property="TypeNamePlural" String=""/>
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="USER_NAME"/>
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="USER_ID"/>
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>USER_ID</PropertyPath>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIvenUserRoles">
+                <Annotation Term="UI.LineItem" Qualifier="UserRole">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="USER_ID"/>
+                            <PropertyValue Property="Label" String="User ID"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="USER_ROLE"/>
+                            <PropertyValue Property="Label" String="User Role"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EMAIL"/>
+                            <PropertyValue Property="Label" String="Email"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIvenUserEntity">
+                <Annotation Term="UI.LineItem" Qualifier="UserEntity">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="USER_ID"/>
+                            <PropertyValue Property="Label" String="User ID"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="ENTITY_CODE"/>
+                            <PropertyValue Property="Label" String="Entity"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="EMAIL"/>
+                            <PropertyValue Property="Label" String="Email"/>
+                            <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIasUsers/USER_ID">
+                <Annotation Term="Common.Text" Path="USER_ID"/>
+                <Annotation Term="Common.Label" String="User ID"/>  
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIasUsers/EMAIL">
+                <Annotation Term="Common.Text" Path="EMAIL"/>
+                <Annotation Term="Common.Label" String="Email ID"/>  
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIvenUserRoles/USER_ROLE">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="MasterUserRole"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="USER_ROLE"/>
+                                    <PropertyValue Property="ValueListProperty" String="CODE"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Label" String="User Role"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues" Bool="true"/>
+                <Annotation Term="Common.Text" Path="TO_ROLE/DESCRIPTION">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterUserRole/CODE">
+                <Annotation Term="Common.Text" Path="DESCRIPTION">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"  />
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterIvenUserEntity/ENTITY_CODE">
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="MasterEntityCode"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="ENTITY_CODE"/>
+                                    <PropertyValue Property="ValueListProperty" String="BUKRS"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="BUTXT"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Label" String="Entity"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues" Bool="false"/>
+                <Annotation Term="Common.Text" Path="TO_ENTITY_CODE/BUTXT">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="fioriUserMasterService.MasterEntityCode/BUKRS">
+                <Annotation Term="Common.Label" String="Entity"/>  
+                <Annotation Term="Common.Text" Path="BUTXT">
+                    <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"   />
+                </Annotation>
+            </Annotations>
+
+            <Annotations Target="fioriUserMasterService.MasterIasUsers/FIRST_NAME">
+                <Annotation Term="Common.Text" Path="FIRST_NAME"/>
+                <Annotation Term="Common.Label" String="First Name"/>
+            </Annotations>
+
+            <Annotations Target="fioriUserMasterService.MasterIasUsers/LAST_NAME">
+                <Annotation Term="Common.Text" Path="LAST_NAME"/>
+                <Annotation Term="Common.Label" String="Last Name"/>
+            </Annotations>
+            
+            <Annotations Target="fioriUserMasterService.MasterIvenUsers/USER_ID">
+                <Annotation Term="Common.Label" String="User ID"/>
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="CollectionPath" String="MasterIasUsers"/>
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="USER_ID"/>
+                                    <PropertyValue Property="ValueListProperty" String="USER_ID"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="FIRST_NAME"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="LAST_NAME"/>
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="EMAIL"/>
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                        <PropertyValue Property="Label" String="User ID"/>
+                    </Record>
+                </Annotation>
+                <Annotation Term="Common.ValueListWithFixedValues" Bool="false"/>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
